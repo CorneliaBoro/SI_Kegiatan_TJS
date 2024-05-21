@@ -6,6 +6,7 @@ use App\Http\Controllers\DPegawaiController;
 use App\Http\Controllers\DKegiatanController;
 use App\Http\Controllers\PendaftaranController;
 use App\Http\Controllers\UserKegiatanController;
+use App\Http\Controllers\DaftarPesertaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,4 +43,8 @@ Route::post('TJS/kegiatan/{id}/daftar', [PendaftaranController::class, 'store'])
 Route::get('TJS/kegiatan/sukses', function () {return view('User.sukses');})->name('sukses');
 // Route untuk cetak bukti
 Route::get('/cetak-bukti', [PendaftaranController::class, 'cetak'])->name('cetak_bukti');
+Route::get('/daftarpeserta/{id}', [DaftarPesertaController::class, 'index'])->name('daftarpeserta.index');
+Route::get('/dokumen{file}', [PendaftaranController::class, 'viewDokumen'])->name('dokumen');
+
+
 

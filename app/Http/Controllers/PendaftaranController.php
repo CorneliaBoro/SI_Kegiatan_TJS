@@ -5,11 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Peserta;
 use App\Models\datakegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PendaftaranController extends Controller
 {
     public function create($kegiatanId)
     {
+
         $kegiatan = datakegiatan::findOrFail($kegiatanId);
         return view('user.pendaftaran', compact('kegiatan'));
     }
@@ -28,7 +30,8 @@ class PendaftaranController extends Controller
             'validasi.required' => 'Anda harus menyatakan bahwa data yang diisi sudah benar!',
         ]);
 
-        $dokumenPath = $request->file('dokumen')->store('dokumen_peserta');
+        $dokumenPath = $request->file('dokumen')->storeAs('dokumen_peserta', 
+            Str::random(20) . '.' . $request->file('dokumen')->extension());
 
         Peserta::create([
             'nama' => $request->nama,
@@ -43,7 +46,7 @@ class PendaftaranController extends Controller
         return redirect()->route('sukses');
     }
 
-    
+
 
     public function cetak()
     {
@@ -52,5 +55,11 @@ class PendaftaranController extends Controller
         // $pdf = PDF::loadView('cetak_bukti', $data);
 
         // return $pdf->download('bukti_pendaftaran.pdf');
+    }
+
+    public function viewDokumen($filename)
+    {
+        $file = storage_path(path: 'app/dokumen_peserta'.$filename);
+        return response()->file($file);
     }
 }
