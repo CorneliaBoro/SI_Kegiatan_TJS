@@ -33,14 +33,14 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-item">
+                {{-- <li class="nav-item">
                     <a href="/dashboard/datakegaiatan" class="nav-link">
                         <i class="nav-icon far fa-file-alt"></i>
                         <p>
                             Jadwal Kegiatan
                         </p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item">
                     <a href="/dashboard/datapegawai" class="nav-link">
                         <i class="nav-icon far fa-list-alt"></i>

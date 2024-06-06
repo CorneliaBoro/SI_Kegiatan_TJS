@@ -22,4 +22,9 @@ class datakegiatan extends Model
     {
         return $this->hasMany(Peserta::class);
     }
+
+    public function laporan()
+    {
+        return $this->hasMany(laporan::class);
+    }
 }

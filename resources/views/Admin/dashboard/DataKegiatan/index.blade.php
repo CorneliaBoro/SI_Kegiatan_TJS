@@ -33,13 +33,13 @@
             <thead>
                 <tr>
                     <th class="col-1">No</th>
-                    <th class="col-3">Nama Kegiatan</th>
+                    <th class="col-1">Nama Kegiatan</th>
                     <th class="col-1">Waktu</th>
                     <th class="col-1">Tempat</th>
+                    <th class="col-1">Deskripsi</th>
                     <th class="col-1">PJ</th>
-                    <th class="col-2">Deskripsi</th>
                     <th class="col-1">Status</th>
-                    <th class="col-2">Aksi</th>
+                    <th class="col-1">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -47,12 +47,12 @@
                 @foreach ($data as $item)
                     <tr>
                         <td class="col-1">{{ $i }}</td>
-                        <td class="col-2">{{ $item->nama }}</td>
+                        <td class="col-2" >{{ $item->nama }}</td>
                         <td class="col-2">{{ $item->waktu }}</td>
-                        <td class="col-2">{{ $item->tempat }}</td>
-                        <td class="col-2">{{ $item->pegawai->nama }}</td>
-                        <td class="col-2">{{ $item->deskripsi }}</td>
-                        <td class="col-2">{{ $item->status}}</td>
+                        <td class="col-1" >{{ $item->tempat }}</td>
+                        <td class="col-3" >{{ $item->deskripsi }}</td>
+                        <td class="col-1">{{ $item->pegawai->nama }}</td>
+                        <td class="col-3">{{ $item->status }}</td>
                         <td class="col-2">
                             <a href="{{ route('datakegiatan.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form onsubmit="return confirm('Yakin Ingin menghapus data ini?')" action="{{ route('datakegiatan.destroy', $item->id) }}" class="d-inline" method="post">

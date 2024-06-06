@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 
 class PendaftaranController extends Controller
 {
+   
     public function create($kegiatanId)
     {
 
@@ -33,7 +34,7 @@ class PendaftaranController extends Controller
         $dokumenPath = $request->file('dokumen')->storeAs('dokumen_peserta', 
             Str::random(20) . '.' . $request->file('dokumen')->extension());
 
-        Peserta::create([
+        $peserta = Peserta::create([
             'nama' => $request->nama,
             'nik' => $request->nik,
             'tgl_lahir' => $request->tgl_lahir,
@@ -42,11 +43,16 @@ class PendaftaranController extends Controller
             'dokumen' => $dokumenPath,
             'id_kegiatan' => $kegiatanId,
         ]);
-
-        return redirect()->route('sukses');
+        return view('User.sukses', compact('peserta'))->with('success', 'Pendaftaran berhasil.');
     }
 
+    public function show($id)
+    {
+        $peserta = Peserta::findOrFail($id);
+        $kegiatan = datakegiatan::findOrFail($peserta->id_kegiatan);
 
+        return view('User.buktidaftar', compact('peserta', 'kegiatan'));
+    }
 
     public function cetak()
     {

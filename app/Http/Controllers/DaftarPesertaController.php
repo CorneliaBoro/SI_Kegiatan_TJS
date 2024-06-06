@@ -16,4 +16,12 @@ class DaftarPesertaController extends Controller
         return view('Admin.dashboard.DataPeserta.daftarpeserta', compact('kegiatan', 'peserta'));
     }
 
+    public function show()
+    {
+        $kegiatan = datakegiatan::all();
+        $peserta = Peserta::all();
+
+        return view('Admin.dashboard.DataPeserta.index', compact('kegiatan', 'peserta'));
+    }
+
 }
