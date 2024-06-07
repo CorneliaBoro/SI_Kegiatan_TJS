@@ -18,6 +18,16 @@ class Peserta extends Model
         'dokumen',
         'id_kegiatan'
     ];
+
+    public static $rules = [
+        'nama' => 'required|string|max:255',
+        'nik' => 'required|string|size:16', 
+        'tgl_lahir' => 'required|date',
+        'no_hp' => 'required|string|max:15',
+        'alamat' => 'required|string',
+        'dokumen' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+        'validasi' => 'required',
+    ];
     public function kegiatan()
     {
         return $this->belongsTo(datakegiatan::class);

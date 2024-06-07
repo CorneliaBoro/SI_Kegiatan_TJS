@@ -38,6 +38,7 @@ class DKegiatanController extends Controller
             'waktu' => 'required',
             'tempat' => 'required',
             'deskripsi' => 'required',
+            'kuota'=>'required',
             'status' => 'required',
             'id_pegawai' => 'required',
         ], [
@@ -45,6 +46,7 @@ class DKegiatanController extends Controller
             'waktu.required' => 'Waktu Wajib diisi!',
             'tempat.required' => 'Tempat Wajib diisi!',
             'deskripsi.required' => 'Deskripsi Wajib diisi!',
+            'kuota.required' => 'Kuota Wajib diisi!',
             'status.required' => 'Status Wajib diisi!',
             'id_pegawai.required' => 'Pilih Pegawai Wajib diisi!',
         ]);
@@ -54,6 +56,7 @@ class DKegiatanController extends Controller
             'waktu' => $request->waktu,
             'tempat' => $request->tempat,
             'deskripsi' => $request->deskripsi,
+            'kuota' => $request->kuota,
             'status' => $request->status,
             'id_pegawai' => $request->id_pegawai,
         ];
@@ -76,8 +79,8 @@ class DKegiatanController extends Controller
      */
     public function edit(string $id)
     {
-        $data = DataKegiatan::findOrFail($id); // Ambil data kegiatan berdasarkan id
-        $pegawai = DataPegawai::all(); // Ambil semua data pegawai
+        $data = datakegiatan::findOrFail($id); // Ambil data kegiatan berdasarkan id
+        $pegawai = datapegawai::all(); // Ambil semua data pegawai
     
         return view('Admin.dashboard.DataKegiatan.edit', compact('data', 'pegawai'));
     }
@@ -92,6 +95,7 @@ class DKegiatanController extends Controller
             'waktu' => 'required',
             'tempat' => 'required',
             'deskripsi' => 'required',
+            'kuota' => 'required',
             'status' => 'required',
             'id_pegawai' => 'required',
         ], [
@@ -99,6 +103,7 @@ class DKegiatanController extends Controller
             'waktu.required' => 'Waktu Wajib diisi!',
             'tempat.required' => 'Tempat Wajib diisi!',
             'deskripsi.required' => 'Deskripsi Wajib diisi!',
+            'kuota.required' => 'Kuota Wajib diisi!',
             'status.required' => 'Status Wajib diisi!',
             'id_pegawai.required' => 'Pilih Pegawai Wajib diisi!',
         ]);
@@ -108,11 +113,12 @@ class DKegiatanController extends Controller
             'waktu' => $request->waktu,
             'tempat' => $request->tempat,
             'deskripsi' => $request->deskripsi,
+            'kuota' => $request->kuota,
             'status' => $request->status,
             'id_pegawai' => $request->id_pegawai,
         ];
     
-        DataKegiatan::where('id', $id)->update($data); // Perbarui data pada tabel DataKegiatan
+        datakegiatan::where('id', $id)->update($data); // Perbarui data pada tabel DataKegiatan
     
         return redirect()->route('datakegiatan.index')->with('success', 'Berhasil Memperbarui Data');
     }

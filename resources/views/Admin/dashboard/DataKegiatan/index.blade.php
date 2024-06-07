@@ -14,6 +14,7 @@
     </div>
 @endsection
 
+@section('pesan')
 @section('tombol')
     <div class="card mx-3">
         <div class="card-body">
@@ -38,6 +39,7 @@
                     <th class="col-1">Tempat</th>
                     <th class="col-1">Deskripsi</th>
                     <th class="col-1">PJ</th>
+                    <th class="col-1">Kuota</th>
                     <th class="col-1">Status</th>
                     <th class="col-1">Aksi</th>
                 </tr>
@@ -52,6 +54,7 @@
                         <td class="col-1" >{{ $item->tempat }}</td>
                         <td class="col-3" >{{ $item->deskripsi }}</td>
                         <td class="col-1">{{ $item->pegawai->nama }}</td>
+                        <td class="col-1">{{ $item->kuota}}</td>
                         <td class="col-3">{{ $item->status }}</td>
                         <td class="col-2">
                             <a href="{{ route('datakegiatan.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>

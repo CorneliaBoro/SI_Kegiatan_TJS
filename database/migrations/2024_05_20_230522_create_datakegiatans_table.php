@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('tempat');
             $table->unsignedBigInteger('id_pegawai');
             $table->foreign('id_pegawai')->references('id')->on('datapegawai')->onDelete('cascade');
+            $table->integer('kuota');
+            $table->integer('current_participants')->default(0); // Kolom untuk jumlah peserta saat ini
             $table->text('deskripsi');
             $table->string('status');
             $table->timestamps();

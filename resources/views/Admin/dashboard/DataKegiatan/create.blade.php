@@ -54,6 +54,11 @@
                 {{ Session::get('deskripsi') }}</textarea>
         </div>
 
+        <div class="mb-3">
+            <label for="kuota" class="form-label">Kuota</label>
+            <input type="kuota" class="form-control form-control-sm" name="kuota" id="kuota" placeholder="" value="{{ Session::get('kuota') }}">
+        </div>
+
         <div class="form-group">
             <label>Status</label>
             <select class="form-control select2 select2-danger" data-dropdown-css-class="select2-danger" style="width: 100%;"

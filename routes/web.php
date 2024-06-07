@@ -44,7 +44,7 @@ Route::prefix('dashboard')->group(
 Route::get('TJS/kegiatan', [UserKegiatanController::class, 'index'])->name('User.index');
 Route::get('TJS/kegiatan/{id}/daftar', [PendaftaranController::class, 'create'])->name('User.create');
 Route::post('TJS/kegiatan/{id}/daftar', [PendaftaranController::class, 'store'])->name('User.store');
-Route::get('TJS/kegiatan/sukses', function () {return view('User.sukses');})->name('sukses');
+Route::get('TJS/kegiatan/sukses', [PendaftaranController::class, 'showSuccess'])->name('sukses');
 Route::get('TJS/bukti-pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('bukti-daftar.show');
 
 // Route untuk cetak bukti

@@ -1,15 +1,21 @@
 @extends('layout.app')
 
-@section('content')
-<div class="container">
-    <h1>Pendaftaran Peserta untuk Kegiatan: {{ $kegiatan->nama }}</h1>
 
-    @if (session('success'))
+@if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+ @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
 
+@section('content')
+<div class="container">
+    <h1>Pendaftaran Peserta untuk Kegiatan: {{ $kegiatan->nama }}</h1>
+    
     <form action="{{ route('User.store', $kegiatan->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
         <div class="mb-3">
@@ -19,7 +25,7 @@
 
         <div class="mb-3">
             <label for="nik" class="form-label">NIK</label>
-            <input type="text" class="form-control" id="nik" name="nik" value="{{ old('nik') }}" required>
+            <input type="text" class="form-control" id="nik" name="nik" required pattern="\d{16}" title="NIK harus berupa 16 digit angka">
         </div>
 
         <div class="mb-3">

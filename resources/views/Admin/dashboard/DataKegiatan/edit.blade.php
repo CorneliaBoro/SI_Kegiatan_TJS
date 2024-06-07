@@ -55,6 +55,12 @@
             <textarea class="form-control form-control-sm" name="deskripsi" id="deskripsi" rows="4" placeholder="">{{ $data->deskripsi }}</textarea>
         </div>
 
+        <div class="mb-3">
+            <label for="kuota" class="form-label">Kuota</label>
+            <input type="text" class="form-control form-control-sm" name="kuota" id="kuota" placeholder=""
+                value="{{ $data->kuota }}">
+        </div>
+
         <div class="form-group">
             <label for="status">Status</label>
             <select class="form-control" name="status">

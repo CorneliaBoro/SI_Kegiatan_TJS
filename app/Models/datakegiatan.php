@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class datakegiatan extends Model
 {
     use HasFactory;
-    protected $table = "datakegiatan";
+    protected $table = 'datakegiatan'; 
+    protected $fillable = ['nama', 'waktu', 'tempat', 'deskripsi','kuota', 'current_participants','status', 'id_pegawai'];
+
     protected $guarded = [];
 
     public function pegawai()
