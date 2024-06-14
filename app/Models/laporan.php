@@ -9,6 +9,7 @@ class laporan extends Model
 {
     use HasFactory;
 
+    protected $table = 'laporan';
     protected $fillable = [
         'id_kegiatan', 'file_dokumentasi',
     ];

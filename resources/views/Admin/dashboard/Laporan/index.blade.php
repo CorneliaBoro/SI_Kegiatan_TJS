@@ -1,6 +1,4 @@
 @extends('Admin.dashboard.layout.dash-layout')
-
-
 @section('header')
     <div class="row mb-2 mx-2 justify-content-between">
         <div class="col-sm-5">
@@ -19,8 +17,6 @@
         <div class="card-body">
             <div>
                 <a href="{{ route('laporan.create') }}" class="btn btn-primary">+ Tambah Data</a>
-                <a href="" rel="noopener" target="_blank" class="btn btn-secondary"><i class="fas fa-print"></i>
-                    Print</a>
             </div>
 
         </div>
@@ -29,38 +25,42 @@
 
 @section('konten')
     <div class="table-responsive">
-        <table>
+        <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th class="col-1">No</th>
-                    <th class="col-3">Nama</th>
-                    <th class="col-2">Tanggal</th>
-                    <th class="col-2">Dokumentasi Kegiatan</th>
-                    <th class="col-2">Daftar Peserta</th>
-                    <th class="col-2">Aksi</th>
+                    <th>No</th>
+                    <th>Nama</th>
+                    <th>Tanggal</th>
+                    <th>Dokumentasi Kegiatan</th>
+                    <th>Daftar Peserta</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                <?php $i = 1; ?>
+                @foreach ($laporan as $laporans)
                     <tr>
-                        <td class="col-1">{{ $i }}</td>
-                        <td class="col-2"></td>
-                        <td class="col-2"></td>
-                        <td class="col-2"></td>
-                        <td class="col-2">
-                            <a href="" class="btn btn-sm btn-info">Daftar Peserta</a>
+                        <td>{{ $loop->iteration }}</td>
+                        <td>{{ $laporans->kegiatan->nama }}</td>
+                        <td>{{ $laporans->kegiatan->waktu }}</td>
+                        <td>
+                                <img src="{{ asset('storage/dokumentas-laporan/' . $laporans->file_dokumentasi) }}" alt="Dokumentasi Kegiatan" width="100">
                         </td>
-                        <td class="col-2">
-                            <a href="" class="btn btn-sm btn-warning"> Edit</a>
-                            <form onsubmit="return confirm('Yakin Ingin menghapus data ini?')" action="" class="d-inline" method="post">
+                        <td>
+                            <a href="{{route('daftarpeserta.index', ['id' => $laporans->id_kegiatan]) }}" class="btn btn-sm btn-info">Daftar Peserta</a>
+                        </td>
+                        <td>
+                            <a href="{{ route('laporan.edit', $laporans->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            
+                            <form onsubmit="return confirm('Yakin Ingin menghapus data ini?')" action="{{ route('laporan.destroy', $laporans->id) }}" class="d-inline" method="post">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-danger" type="submit" name="submit">Del</button>
-                            </form>           
-                            <a href="" rel="noopener" target="_blank" class="btn btn-secondary"><i class="fas fa-print"></i></a>                 
+                            </form>
+                            
+                            <a href="" rel="noopener" target="_blank" class="btn btn-secondary"><i class="fas fa-print"></i></a>
                         </td>
                     </tr>
-                    <?php $i++; ?>
+                @endforeach
             </tbody>
         </table>
     </div>

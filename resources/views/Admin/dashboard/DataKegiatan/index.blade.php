@@ -52,8 +52,8 @@
                         <td class="col-2" >{{ $item->nama }}</td>
                         <td class="col-2">{{ $item->waktu }}</td>
                         <td class="col-1" >{{ $item->tempat }}</td>
-                        <td class="col-3" >{{ $item->deskripsi }}</td>
-                        <td class="col-1">{{ $item->pegawai->nama }}</td>
+                        <td class="col-2" >{{ $item->deskripsi }}</td>
+                        <td class="col-2">{{ $item->pegawai->nama }}</td>
                         <td class="col-1">{{ $item->kuota}}</td>
                         <td class="col-3">{{ $item->status }}</td>
                         <td class="col-2">

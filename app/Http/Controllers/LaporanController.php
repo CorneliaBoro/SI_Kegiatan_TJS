@@ -6,6 +6,7 @@ use App\Models\laporan;
 use Illuminate\Support\Str;
 use App\Models\datakegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
 {
@@ -14,7 +15,9 @@ class LaporanController extends Controller
      */
     public function index()
     {
-        return view('Admin.dashboard.Laporan.index');
+        $laporan = Laporan::with('kegiatan')->get();
+
+          return view('Admin.dashboard.Laporan.index', compact('laporan'));
     }
 
     /**
@@ -34,20 +37,23 @@ class LaporanController extends Controller
     {
         $request->validate([
             'id_kegiatan' => 'required',
-            'file_dokumentasi' => 'required|mimes:jpeg,png,jpg,pdf,doc,docx|max:2048',
+            'file_dokumentasi' => 'required|file|mimes:jpg,png,jpeg|max:2048',
         ]);
-    
-        // Simpan file dokumentasi
-        $filePath = $request->file('file_dokumentasi')->storeAs('dokumentasi', 
-            Str::random(20) . '.' . $request->file('file_dokumentasi')->extension());
+        
+        $dokumentasi     = $request->file('file_dokumentasi');
+        $filename   = date('Y-m-d') . $dokumentasi->getClientOriginalName();
+        $path       = 'dokumentas-laporan/' . $filename;
+
+        Storage::disk('public')->put($path, file_get_contents($dokumentasi));
 
         // Buat laporan baru
-        laporan::create([
+        $laporan = laporan::create([
             'id_kegiatan' => $request->id_kegiatan,
-            'file_dokumentasi' => $filePath,
+            'file_dokumentasi' => $filename,
         ]);
     
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil disimpan.');
+        $request->session()->put('laporan', $laporan);
+        return redirect()->route('laporan.index',['laporan'=>$laporan])->with('success', 'Laporan berhasil disimpan.');
     }
 
     /**
@@ -63,7 +69,10 @@ class LaporanController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $laporan = Laporan::findOrFail($id);
+        $kegiatan = DataKegiatan::pluck('nama', 'id');
+
+        return view('Admin.dashboard.Laporan.edit', compact('laporan', 'kegiatan'));
     }
 
     /**
@@ -71,7 +80,27 @@ class LaporanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'id_kegiatan' => 'required',
+            'file_dokumentasi' => 'nullable|file|mimes:jpg,png,jpeg|max:2048',
+        ]);
+
+        $laporan = Laporan::findOrFail($id);
+
+        if ($request->hasFile('file_dokumentasi')) {
+            $dokumentasi = $request->file('file_dokumentasi');
+            $filename = date('Y-m-d') . $dokumentasi->getClientOriginalName();
+            $path = 'dokumentas-laporan/' . $filename;
+
+            Storage::disk('public')->put($path, file_get_contents($dokumentasi));
+            $laporan->file_dokumentasi = $filename;
+        }
+
+        $laporan->id_kegiatan = $request->id_kegiatan;
+        $laporan->save();
+
+        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil diperbarui.');
+
     }
 
     /**
@@ -79,6 +108,13 @@ class LaporanController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $laporan = Laporan::findOrFail($id);
+
+    // Hapus laporan yang ditemukan
+    $laporan->delete();
+
+    // Redirect kembali ke halaman index laporan dengan pesan sukses
+    return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dihapus.');
+   
     }
 }

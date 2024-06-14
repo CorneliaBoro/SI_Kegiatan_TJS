@@ -46,11 +46,17 @@ Route::get('TJS/kegiatan/{id}/daftar', [PendaftaranController::class, 'create'])
 Route::post('TJS/kegiatan/{id}/daftar', [PendaftaranController::class, 'store'])->name('User.store');
 Route::get('TJS/kegiatan/sukses', [PendaftaranController::class, 'showSuccess'])->name('sukses');
 Route::get('TJS/bukti-pendaftaran/{id}', [PendaftaranController::class, 'show'])->name('bukti-daftar.show');
+Route::get('TJS/buktidaftar', [PendaftaranController::class, 'viewpdf'])->name('bukti-daftar.cetak');
 
 // Route untuk cetak bukti
 Route::get('/cetak-bukti', [PendaftaranController::class, 'cetak'])->name('cetak_bukti');
 Route::get('/daftarpeserta/{id}', [DaftarPesertaController::class, 'index'])->name('daftarpeserta.index');
+Route::get('/cetakdaftarpeserta', [DaftarPesertaController::class, 'reportpdf']);
 Route::get('/dokumen{file}', [PendaftaranController::class, 'viewDokumen'])->name('dokumen');
+
+Route::get('/koneksi', function () {
+    return view('cek_koneksi');
+});
 
 
 

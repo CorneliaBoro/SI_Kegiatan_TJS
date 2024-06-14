@@ -1,5 +1,6 @@
 <?php
 
+use Mpdf\MpdfServiceProvider;
 use Illuminate\Support\Facades\Facade;
 
 return [

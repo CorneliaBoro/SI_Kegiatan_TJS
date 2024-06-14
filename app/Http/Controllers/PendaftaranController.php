@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Peserta;
+use Illuminate\Support\Str;
 use App\Models\datakegiatan;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class PendaftaranController extends Controller
 {
@@ -19,6 +20,7 @@ class PendaftaranController extends Controller
     {
         $kegiatan = datakegiatan::findOrFail($kegiatanId);
 
+      
         if ($kegiatan->current_participants >= $kegiatan->kuota) {
             return redirect()->back()->with('error', 'Kuota sudah penuh.');
         }
@@ -29,18 +31,26 @@ class PendaftaranController extends Controller
             'tgl_lahir' => 'required|date',
             'no_hp' => 'required|string|max:15',
             'alamat' => 'required|string',
-            'dokumen' => 'required|file|mimes:pdf,doc,docx,jpg,png|max:2048',
+            'dokumen' => 'required|file|mimes:jpg,png,jpeg|max:2048',
             'validasi' => 'required',
         ], [
             'nik.unique' => 'NIK sudah digunakan pada kegiatan ini.'
         ]);
 
-        if (Peserta::where('nik', $request->nik)->exists()) {
-            return redirect()->back()->with('error', 'NIK sudah Terdaftar');
+        $nik = $request->nik;
+        if (Peserta::where('nik', $nik)->exists()) {
+            return redirect()->back()->with('error', "NIK '$nik' sudah Terdaftar");
         }
+        
 
-        $dokumenPath = $request->file('dokumen')->storeAs('dokumen_peserta', 
-            Str::random(20) . '.' . $request->file('dokumen')->extension());
+        $dokumen     = $request->file('dokumen');
+        $filename   = date('Y-m-d') . $dokumen->getClientOriginalName();
+        $path       = 'dokumen-ktp/' . $filename;
+
+        Storage::disk('public')->put($path, file_get_contents($dokumen));
+
+        // $dokumenPath = $request->file('dokumen')->storeAs('dokumen_peserta', 
+        //     Str::random(20) . '.' . $request->file('dokumen')->extension());
 
             $peserta = Peserta::create([
                 'nama' => $request->nama,
@@ -48,7 +58,7 @@ class PendaftaranController extends Controller
                 'tgl_lahir' => $request->tgl_lahir,
                 'no_hp' => $request->no_hp,
                 'alamat' => $request->alamat,
-                'dokumen' => $dokumenPath,
+                'dokumen' => $filename,
                 'id_kegiatan' => $kegiatanId,
             ]);
 
@@ -60,7 +70,7 @@ class PendaftaranController extends Controller
 
     public function showSuccess()
     {
-    return view('User.sukses');
+        return view('User.sukses');
     }
     public function show($id)
     {
@@ -71,13 +81,9 @@ class PendaftaranController extends Controller
 
     }
 
-    public function cetak()
+    public function reportpdf()
     {
-        // Contoh menggunakan laravel-dompdf untuk generate PDF
-        $data = ['title' => 'Bukti Pendaftaran'];
-        // $pdf = PDF::loadView('cetak_bukti', $data);
-
-        // return $pdf->download('bukti_pendaftaran.pdf');
+        
     }
 
     public function viewDokumen($filename)
