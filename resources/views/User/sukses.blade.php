@@ -10,7 +10,7 @@
             @php
             $peserta = session('peserta');
             @endphp
-            <a href="{{ route('bukti-daftar.show', $peserta->id) }}" class="btn btn-primary">Cetak Bukti Daftar</a>
+           <a href="{{ route('bukti-daftar.show', $peserta->id) }}" class="btn btn-primary">Cetak Bukti Daftar</a>
         </div>
     </div>
 </div>

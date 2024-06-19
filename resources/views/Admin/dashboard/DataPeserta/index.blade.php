@@ -29,7 +29,7 @@
                         <td class="col-1">{{ $index + 1 }}</td>
                         <td class="col-3">{{ $item->nama }}</td>
                         <td class="col-2">
-                            <a href="{{ route('daftarpeserta.index',['id' => $item->id]) }}" class="btn btn-sm btn-warning">Lihat Data</a>    
+                            <a href="{{ route('daftarpeserta.index',['id' => $item->id]) }}" class="btn btn-sm btn-warning">Cetak Daftar Peserta</a>    
                         </td>
                     </tr>
                 @endforeach

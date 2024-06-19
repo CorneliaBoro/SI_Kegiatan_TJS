@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Models\datakegiatan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PendaftaranController extends Controller
 {
@@ -24,7 +25,10 @@ class PendaftaranController extends Controller
         if ($kegiatan->current_participants >= $kegiatan->kuota) {
             return redirect()->back()->with('error', 'Kuota sudah penuh.');
         }
-
+        $nik = $request->nik;
+        if (Peserta::where('nik', $nik)->exists()) {
+            return redirect()->back()->with('error', "NIK '$nik' sudah Terdaftar");
+        }
         $request->validate([
             'nama' => 'required|string|max:255',
             'nik' => 'required|string|size:16|unique:peserta,nik,NULL,id,id_kegiatan,'.$kegiatanId,
@@ -37,10 +41,7 @@ class PendaftaranController extends Controller
             'nik.unique' => 'NIK sudah digunakan pada kegiatan ini.'
         ]);
 
-        $nik = $request->nik;
-        if (Peserta::where('nik', $nik)->exists()) {
-            return redirect()->back()->with('error', "NIK '$nik' sudah Terdaftar");
-        }
+       
         
 
         $dokumen     = $request->file('dokumen');
@@ -72,23 +73,32 @@ class PendaftaranController extends Controller
     {
         return view('User.sukses');
     }
-    public function show($id)
+
+public function show($id)
     {
-        $peserta = Peserta::findOrFail($id);
+    $peserta = Peserta::findOrFail($id);
     $kegiatan = datakegiatan::findOrFail($peserta->id_kegiatan);
 
-    return view('User.buktidaftar', compact('peserta', 'kegiatan'));
+    $data = [
+        'peserta' => $peserta,
+        'kegiatan' => $kegiatan,
+    ];
+    $nama_potongan = explode(' ', $peserta->nama);
 
-    }
+    // Menggunakan potongan pertama (nama depan) sebagai nama file PDF
+    $nama_file = 'BuktiPendaftaran_' . $nama_potongan[0] . '.pdf';
 
-    public function reportpdf()
-    {
-        
-    }
+    // Membuat data yang akan dilewatkan ke view
+    $data = [
+        'peserta' => $peserta,
+        'kegiatan' => $kegiatan,
+    ];
 
-    public function viewDokumen($filename)
-    {
-        $file = storage_path('app/dokumen_peserta/'.$filename);
-        return response()->file($file);
+    // Load view dari PDF
+    $pdf = PDF::loadView('User.buktidaftar', $data);
+
+    // Menggunakan metode download untuk mengunduh PDF dengan nama file yang sudah dibuat
+    return $pdf->download($nama_file);
+
     }
 }

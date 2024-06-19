@@ -3,9 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\laporan;
+use App\Models\Peserta;
+use App\Models\datapegawai;
 use Illuminate\Support\Str;
 use App\Models\datakegiatan;
+
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class LaporanController extends Controller
@@ -61,7 +66,7 @@ class LaporanController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
     }
 
     /**
@@ -117,4 +122,26 @@ class LaporanController extends Controller
     return redirect()->route('laporan.index')->with('success', 'Laporan berhasil dihapus.');
    
     }
+
+    public function print($id_kegiatan)
+{
+    $kegiatan = DataKegiatan::findOrFail($id_kegiatan);
+    $peserta = Peserta::where('id_kegiatan', $id_kegiatan)->get();
+    $laporan = Laporan::where('id_kegiatan', $id_kegiatan)->firstOrFail();
+    $pegawai = datapegawai::all(); 
+
+    $file_dokumentasi = Storage::disk('public')->get('dokumentas-laporan/' . $laporan->file_dokumentasi);
+    $base64_dokumentasi = base64_encode($file_dokumentasi);
+    $data = [
+        'peserta' => $peserta,
+        'kegiatan' => $kegiatan,
+        'laporan' => $laporan,
+        'pegawai'=>$pegawai,
+        'base64_dokumentasi' => $base64_dokumentasi, 
+    ];
+    // Tambahkan file dokumentasi sebagai variabel ke view
+    $data['base64_dokumentasi'] = $base64_dokumentasi;
+    $pdf = PDF::loadView('Admin.dashboard.Laporan.cetak-laporan', $data);
+    return $pdf->download('LaporanKegiatan' . $kegiatan->nama . '.pdf');
+}
 }

@@ -57,7 +57,7 @@
                                 <button class="btn btn-sm btn-danger" type="submit" name="submit">Del</button>
                             </form>
                             
-                            <a href="" rel="noopener" target="_blank" class="btn btn-secondary"><i class="fas fa-print"></i></a>
+                            <a href="{{ route('laporan.print', ['id' => $laporans->id_kegiatan]) }}" rel="noopener" target="_blank" class="btn btn-secondary"><i class="fas fa-print"></i></a>
                         </td>
                     </tr>
                 @endforeach

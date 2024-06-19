@@ -20,8 +20,6 @@
         <div class="card-body">
             <div>
                 <a href="{{ route('datakegiatan.create') }}" class="btn btn-primary">+ Tambah Data</a>
-                <a href="" rel="noopener" target="_blank" class="btn btn-secondary"><i class="fas fa-print"></i>
-                    Print</a>
             </div>
 
         </div>
