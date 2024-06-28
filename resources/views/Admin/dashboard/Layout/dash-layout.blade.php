@@ -37,9 +37,6 @@
                 </li>
             </ul>
 
-            <ul class="navbar-nav ml-auto">
-                <a href="" class="nav-link">Logout</a>
-            </ul>
 
             <!-- Right navbar links -->
             {{-- <ul class="navbar-nav ml-auto">

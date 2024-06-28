@@ -15,8 +15,8 @@
         }
         .header {
             text-align: center;
-            border-bottom: 2px solid #000; /* Garis bawah tebal 2px solid hitam */
-            padding-bottom: 10px; /* Ruang bawah agar tidak rapat dengan garis */
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
             margin-bottom: 20px;
         }
         .header h1 {
@@ -52,12 +52,18 @@
             max-width: 100%;
             height: auto;
         }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #000;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     @php
     function tanggal_indonesia($tanggal) {
-        // Ubah format tanggal dari Y-m-d H:i:s ke format bahasa Indonesia
         $bulan = [
             '01' => 'Januari',
             '02' => 'Februari',
@@ -81,10 +87,31 @@
     }
 
     function jam($waktu) {
-        // Ambil hanya jam dan menit dari waktu
         return substr($waktu, 11, 5);
     }
-@endphp
+
+    function tanggal_cetak() {
+        $hari = date('d');
+        $bulan = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+        $bulan_angka = date('m');
+        $tahun = date('Y');
+
+        return $hari . ' ' . $bulan[$bulan_angka] . ' ' . $tahun;
+    }
+    @endphp
     <div class="container">
         <div class="header">
             <h1>Laporan Kegiatan</h1>
@@ -130,5 +157,8 @@
             </table>
         </div>
     </div>
+    <footer>
+        <p>Dicetak pada {{ tanggal_cetak() }}</p>
+    </footer>
 </body>
 </html>

@@ -58,6 +58,16 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href={{route('logout')  }} class="nav-link">
+                        <i class="nav-icon far fa-logout"></i>
+                        <p>
+                            Logout
+                        </p>
+                    </a>
+                </li>
+
+
                 {{-- <li class="nav-header">DATA PELAKU</li>
                 <li class="nav-item">
                     <a href="/dashboard/datauser" class="nav-link">

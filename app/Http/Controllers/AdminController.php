@@ -9,4 +9,9 @@ class AdminController extends Controller
     function index(){
         return view('Admin.dashboard.index');
     }
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 }
