@@ -13,6 +13,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
+
 class LaporanController extends Controller
 {
     /**
@@ -42,23 +43,36 @@ class LaporanController extends Controller
     {
         $request->validate([
             'id_kegiatan' => 'required',
-            'file_dokumentasi' => 'required|file|mimes:jpg,png,jpeg|max:2048',
+            'file_dokumentasi.*' => 'required|file|mimes:jpg,png,jpeg|max:2048',
         ]);
-        
-        $dokumentasi     = $request->file('file_dokumentasi');
-        $filename   = date('Y-m-d') . $dokumentasi->getClientOriginalName();
-        $path       = 'dokumentas-laporan/' . $filename;
-
-        Storage::disk('public')->put($path, file_get_contents($dokumentasi));
-
+    
+        $filePaths = [];
+        if ($request->hasFile('file_dokumentasi')) {
+            foreach ($request->file('file_dokumentasi') as $dokumentasi) {
+                $filename = date('Y-m-d') . '-' . uniqid() . '-' . $dokumentasi->getClientOriginalName();
+                $path = 'dokumentas-laporan/' . $filename;
+    
+                Storage::disk('public')->put($path, file_get_contents($dokumentasi));
+    
+                // Simpan setiap file path
+                $filePaths[] = $filename;
+            }
+        }
+    
+        // Konversi array file path menjadi string JSON untuk penyimpanan
+        $filePathsJson = json_encode($filePaths);
+    
         // Buat laporan baru
-        $laporan = laporan::create([
+        $laporan = Laporan::create([
             'id_kegiatan' => $request->id_kegiatan,
-            'file_dokumentasi' => $filename,
+            'file_dokumentasi' => $filePathsJson,
         ]);
     
         $request->session()->put('laporan', $laporan);
-        return redirect()->route('laporan.index',['laporan'=>$laporan])->with('success', 'Laporan berhasil disimpan.');
+    
+        // Redirect ke halaman detail laporan
+        return redirect()->route('laporan.index', ['laporan' => $laporan->id])
+                         ->with('success', 'Laporan berhasil disimpan.');
     }
 
     /**
@@ -87,25 +101,37 @@ class LaporanController extends Controller
     {
         $request->validate([
             'id_kegiatan' => 'required',
-            'file_dokumentasi' => 'nullable|file|mimes:jpg,png,jpeg|max:2048',
+            'file_dokumentasi.*' => 'nullable|file|mimes:jpg,png,jpeg|max:2048',
         ]);
-
+        
+        // Ambil data laporan yang akan diupdate
         $laporan = Laporan::findOrFail($id);
-
+    
+        // Handle file dokumentasi yang diupload
         if ($request->hasFile('file_dokumentasi')) {
-            $dokumentasi = $request->file('file_dokumentasi');
-            $filename = date('Y-m-d') . $dokumentasi->getClientOriginalName();
-            $path = 'dokumentas-laporan/' . $filename;
-
-            Storage::disk('public')->put($path, file_get_contents($dokumentasi));
-            $laporan->file_dokumentasi = $filename;
+            $filePaths = [];
+            foreach ($request->file('file_dokumentasi') as $dokumentasi) {
+                $filename = date('Y-m-d') . '-' . uniqid() . '-' . $dokumentasi->getClientOriginalName();
+                $path = 'dokumentas-laporan/' . $filename;
+    
+                Storage::disk('public')->put($path, file_get_contents($dokumentasi));
+    
+                // Simpan setiap file path
+                $filePaths[] = $filename;
+            }
+    
+            // Konversi array file path menjadi string JSON untuk penyimpanan
+            $laporan->file_dokumentasi = json_encode($filePaths);
         }
-
+    
+        // Update id_kegiatan jika ada perubahan
         $laporan->id_kegiatan = $request->id_kegiatan;
+    
+        // Simpan perubahan laporan
         $laporan->save();
-
-        return redirect()->route('laporan.index')->with('success', 'Laporan berhasil diperbarui.');
-
+    
+        return redirect()->route('laporan.index')
+                         ->with('success', 'Laporan berhasil diperbarui.');
     }
 
     /**
@@ -126,22 +152,40 @@ class LaporanController extends Controller
     public function print($id_kegiatan)
 {
     $kegiatan = DataKegiatan::findOrFail($id_kegiatan);
-    $peserta = Peserta::where('id_kegiatan', $id_kegiatan)->get();
-    $laporan = Laporan::where('id_kegiatan', $id_kegiatan)->firstOrFail();
-    $pegawai = datapegawai::all(); 
+$laporan = Laporan::where('id_kegiatan', $id_kegiatan)->firstOrFail();
+$peserta = Peserta::where('id_kegiatan', $id_kegiatan)->get();
+$pegawai = DataPegawai::all(); // Sesuaikan dengan model pegawai Anda
 
-    $file_dokumentasi = Storage::disk('public')->get('dokumentas-laporan/' . $laporan->file_dokumentasi);
-    $base64_dokumentasi = base64_encode($file_dokumentasi);
-    $data = [
-        'peserta' => $peserta,
-        'kegiatan' => $kegiatan,
-        'laporan' => $laporan,
-        'pegawai'=>$pegawai,
-        'base64_dokumentasi' => $base64_dokumentasi, 
-    ];
-    // Tambahkan file dokumentasi sebagai variabel ke view
-    $data['base64_dokumentasi'] = $base64_dokumentasi;
-    $pdf = PDF::loadView('Admin.dashboard.Laporan.cetak-laporan', $data);
-    return $pdf->download('LaporanKegiatan' . $kegiatan->nama . '.pdf');
+// Base64 encode untuk file dokumentasi utama
+$file_dokumentasi_path = 'dokumentas-laporan/' . $laporan->file_dokumentasi;
+$file_dokumentasi = Storage::disk('public')->get($file_dokumentasi_path);
+$base64_dokumentasi = base64_encode($file_dokumentasi);
+// Ubah format dokumen dalam peserta menjadi array base64
+foreach ($peserta as $item) {
+    $dokumen_path = 'dokumen-ktp/' . $item->dokumen;
+    $item->base64_dokumen = base64_encode(Storage::disk('public')->get($dokumen_path));
 }
+
+// Data untuk dikirimkan ke view
+$data = [
+    'kegiatan' => $kegiatan,
+    'laporan' => $laporan,
+    'peserta' => $peserta,
+    'pegawai' => $pegawai,
+    'base64_dokumentasi' => $base64_dokumentasi,
+];
+
+
+// Load view dan buat PDF
+$pdf = PDF::loadView('Admin.dashboard.Laporan.cetak-laporan', $data);
+
+// Download PDF dengan nama file sesuai nama kegiatan
+return $pdf->download('LaporanKegiatan_' . $kegiatan->nama . '.pdf');
+}
+
+
+
+
+
+
 }

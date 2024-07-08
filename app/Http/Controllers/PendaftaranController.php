@@ -6,6 +6,7 @@ use App\Models\Peserta;
 use Illuminate\Support\Str;
 use App\Models\datakegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -26,47 +27,46 @@ class PendaftaranController extends Controller
             return redirect()->back()->with('error', 'Kuota sudah penuh.');
         }
         $nik = $request->nik;
-        if (Peserta::where('nik', $nik)->exists()) {
-            return redirect()->back()->with('error', "NIK '$nik' sudah Terdaftar");
-        }
-        $request->validate([
-            'nama' => 'required|string|max:255',
-            'nik' => 'required|string|size:16|unique:peserta,nik,NULL,id,id_kegiatan,'.$kegiatanId,
-            'tgl_lahir' => 'required|date',
-            'no_hp' => 'required|string|max:15',
-            'alamat' => 'required|string',
-            'dokumen' => 'required|file|mimes:jpg,png,jpeg|max:2048',
-            'validasi' => 'required',
-        ], [
-            'nik.unique' => 'NIK sudah digunakan pada kegiatan ini.'
-        ]);
-
+if (Peserta::where('nik', $nik)->where('id_kegiatan', $kegiatanId)->exists()) {
+    return redirect()->back()->with('error', "NIK '$nik' sudah terdaftar di kegiatan ini.");
+}$request->validate([
+    'nama' => 'required|string|max:255',
+    'nik' => [
+        'required',
+        'string',
+        'size:16',
+        Rule::unique('peserta')->where(function ($query) use ($kegiatanId) {
+            return $query->where('id_kegiatan', $kegiatanId);
+        }),
+    ],
+    'tgl_lahir' => 'required|date',
+    'no_hp' => 'required|string|max:15',
+    'alamat' => 'required|string',
+    'dokumen' => 'required|file|mimes:jpg,png,jpeg|max:2048',
+    'validasi' => 'required',
+], [
+    'nik.unique' => 'NIK sudah digunakan pada kegiatan ini.'
+]);
        
-        
+$dokumen = $request->file('dokumen');
+$filename = date('Y-m-d') . $dokumen->getClientOriginalName();
+$path = 'dokumen-ktp/' . $filename;
 
-        $dokumen     = $request->file('dokumen');
-        $filename   = date('Y-m-d') . $dokumen->getClientOriginalName();
-        $path       = 'dokumen-ktp/' . $filename;
+Storage::disk('public')->put($path, file_get_contents($dokumen));
 
-        Storage::disk('public')->put($path, file_get_contents($dokumen));
+$peserta = Peserta::create([
+    'nama' => $request->nama,
+    'nik' => $request->nik,
+    'tgl_lahir' => $request->tgl_lahir,
+    'no_hp' => $request->no_hp,
+    'alamat' => $request->alamat,
+    'dokumen' => $filename,
+    'id_kegiatan' => $kegiatanId,
+]);
 
-        // $dokumenPath = $request->file('dokumen')->storeAs('dokumen_peserta', 
-        //     Str::random(20) . '.' . $request->file('dokumen')->extension());
-
-            $peserta = Peserta::create([
-                'nama' => $request->nama,
-                'nik' => $request->nik,
-                'tgl_lahir' => $request->tgl_lahir,
-                'no_hp' => $request->no_hp,
-                'alamat' => $request->alamat,
-                'dokumen' => $filename,
-                'id_kegiatan' => $kegiatanId,
-            ]);
-
-        // Increment current_participants
-        $kegiatan->increment('current_participants');
-        $request->session()->put('peserta', $peserta);
-        return redirect()->route('sukses', ['peserta' => $peserta])->with('success', 'Pendaftaran berhasil.');
+$kegiatan->increment('current_participants');
+$request->session()->put('peserta', $peserta);
+return redirect()->route('sukses', ['peserta' => $peserta])->with('success', 'Pendaftaran berhasil.');
     }
 
     public function showSuccess()

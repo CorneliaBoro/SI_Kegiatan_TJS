@@ -21,6 +21,7 @@
                     <th class="col-1">No</th>
                     <th class="col-3">Nama Kegiatan</th>
                     <th class="col-2">Daftar Peserta</th>
+                    <th class="col-2">Kelola Peserta</th> <!-- Tambah kolom baru -->
                 </tr>
             </thead>
             <tbody>
@@ -29,7 +30,10 @@
                         <td class="col-1"><?php echo e($index + 1); ?></td>
                         <td class="col-3"><?php echo e($item->nama); ?></td>
                         <td class="col-2">
-                            <a href="<?php echo e(route('daftarpeserta.index',['id' => $item->id])); ?>" class="btn btn-sm btn-warning">Cetak Daftar Peserta</a>    
+                            <a href="<?php echo e(route('daftarpeserta.index',['id' => $item->id])); ?>" class="btn btn-sm btn-warning">Cetak Daftar Peserta</a>
+                        </td>
+                        <td class="col-2">
+                            <a href="<?php echo e(route('kelolapeserta',['id' => $item->id])); ?>" class="btn btn-sm btn-info">Kelola Peserta</a>
                         </td>
                     </tr>
                 <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

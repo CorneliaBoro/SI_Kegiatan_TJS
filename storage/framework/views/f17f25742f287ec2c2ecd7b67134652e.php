@@ -31,11 +31,11 @@
     
         <div class="form-group">
             <label for="file_dokumentasi" class="form-label">Upload Dokumentasi</label>
-            <input type="file" class="form-control" id="file_dokumentasi" name="file_dokumentasi" required>
+            <input type="file" class="form-control" id="file_dokumentasi" name="file_dokumentasi[]" multiple required>
         </div>
     
         <button type="submit" class="btn btn-primary">Submit</button>
     </form> 
-    <?php $__env->stopSection(); ?>
+<?php $__env->stopSection(); ?>
 
 <?php echo $__env->make('Admin.dashboard.layout.dash-layout', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\xampp\htdocs\SI_Kegiatan_TJS\resources\views/Admin/dashboard/Laporan/create.blade.php ENDPATH**/ ?>

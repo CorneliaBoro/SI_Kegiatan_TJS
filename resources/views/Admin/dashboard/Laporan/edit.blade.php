@@ -1,14 +1,13 @@
 @extends('Admin.dashboard.layout.dash-layout')
 
-
 @section('header')
     <div class="row mb-2 mx-2 justify-content-between">
         <div class="col-sm-5">
-            <h5>Laporan</h5>
+            <h5>Edit Data Laporan</h5>
         </div>
         <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-                <li class="breadcrumb-item active">Laporan</li>
+                <li class="breadcrumb-item active">Edit Laporan</li>
             </ol>
         </div>
     </div>
@@ -33,7 +32,7 @@
     
         <div class="form-group">
             <label for="file_dokumentasi" class="form-label">Upload Dokumentasi</label>
-            <input type="file" class="form-control" id="file_dokumentasi" name="file_dokumentasi">
+            <input type="file" class="form-control" id="file_dokumentasi" name="file_dokumentasi[]" multiple required>
             @if ($laporan->file_dokumentasi)
                 <p>File Dokumentasi Saat Ini: <a href="{{ asset('storage/dokumentas-laporan/' . $laporan->file_dokumentasi) }}" target="_blank">{{ $laporan->file_dokumentasi }}</a></p>
             @else

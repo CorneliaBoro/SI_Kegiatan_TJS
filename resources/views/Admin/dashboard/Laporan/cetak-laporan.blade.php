@@ -111,7 +111,13 @@
 
         return $hari . ' ' . $bulan[$bulan_angka] . ' ' . $tahun;
     }
+
+    function getMimeType($file) {
+        $path = public_path('storage/dokumentas-laporan/' . $file);
+        return mime_content_type($path);
+    }
     @endphp
+
     <div class="container">
         <div class="header">
             <h1>Laporan Kegiatan</h1>
@@ -123,8 +129,13 @@
         </div>
         <div class="table-container">
             <h2>Dokumentasi Kegiatan</h2>
-            <img src="data:image/png;base64,{{ $base64_dokumentasi }}" alt="Dokumentasi Kegiatan" style="width: 200; height: auto;">
+            @foreach(json_decode($laporan->file_dokumentasi) as $file)
+                <?php $file = str_replace(' ', '%20', $file); ?>
+                <p>{{ Storage::url('dokumentas-laporan/' . $file) }}</p> <!-- Debug URL -->
+                <img src="{{ Storage::url('dokumentas-laporan/' . $file) }}" alt="{{ $file }}" style="max-width: 100px; max-height: 100px; margin: 5px;" />
+            @endforeach
         </div>
+        
         <div class="table-container">
             <h2>Daftar Peserta</h2>
             <table>
@@ -140,16 +151,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($peserta as $index => $pesertas)
+                    @foreach ($peserta as $index => $item)
                         <tr>
                             <td>{{ $index + 1 }}</td>
-                            <td>{{ $pesertas->nama }}</td>
-                            <td>{{ $pesertas->nik }}</td>
-                            <td>{{ $pesertas->tgl_lahir }}</td>
-                            <td>{{ $pesertas->no_hp }}</td>
-                            <td>{{ $pesertas->alamat }}</td>
+                            <td>{{ $item->nama }}</td>
+                            <td>{{ $item->nik }}</td>
+                            <td>{{ $item->tgl_lahir }}</td>
+                            <td>{{ $item->no_hp }}</td>
+                            <td>{{ $item->alamat }}</td>
                             <td>
-                                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('storage/dokumen-ktp/' . $pesertas->dokumen))) }}" alt="KTP">
+                                <img src="data:image/png;base64,{{ $item->base64_dokumen }}" alt="KTP">
                             </td>
                         </tr>
                     @endforeach

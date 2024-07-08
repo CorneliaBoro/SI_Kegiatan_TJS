@@ -1,4 +1,5 @@
 @extends('Admin.dashboard.layout.dash-layout')
+
 @section('header')
     <div class="row mb-2 mx-2 justify-content-between">
         <div class="col-sm-5">
@@ -18,7 +19,6 @@
             <div>
                 <a href="{{ route('laporan.create') }}" class="btn btn-primary">+ Tambah Data</a>
             </div>
-
         </div>
     </div>
 @endsection
@@ -43,10 +43,16 @@
                         <td>{{ $laporans->kegiatan->nama }}</td>
                         <td>{{ $laporans->kegiatan->waktu }}</td>
                         <td>
-                                <img src="{{ asset('storage/dokumentas-laporan/' . $laporans->file_dokumentasi) }}" alt="Dokumentasi Kegiatan" width="100">
+                            @if ($laporans->file_dokumentasi)
+                                @foreach(json_decode($laporans->file_dokumentasi) as $file)
+                                <img src="{{ Storage::url('dokumentas-laporan/' . $file) }}" alt="{{ $file }}" style="max-width: 100px; max-height: 100px; margin: 5px;">
+
+                                @endforeach
+                            @endif
                         </td>
                         <td>
-                            <a href="{{route('daftarpeserta.index', ['id' => $laporans->id_kegiatan]) }}" class="btn btn-sm btn-info">Daftar Peserta</a>
+                            
+                            <a href="{{ route('daftarpeserta.index', ['id' => $laporans->id_kegiatan]) }}" class="btn btn-sm btn-info">Daftar Peserta</a>
                         </td>
                         <td>
                             <a href="{{ route('laporan.edit', $laporans->id) }}" class="btn btn-sm btn-warning">Edit</a>

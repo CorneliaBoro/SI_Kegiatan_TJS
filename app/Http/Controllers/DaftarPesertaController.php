@@ -40,4 +40,17 @@ class DaftarPesertaController extends Controller
         return view('Admin.dashboard.DataPeserta.index', compact('kegiatan', 'peserta'));
     }
 
+    public function kelolapeserta($id_kegiatan)
+    {
+        $kegiatan = DataKegiatan::findOrFail($id_kegiatan);
+        $peserta = Peserta::where('id_kegiatan', $id_kegiatan)->get();
+
+        $data = [
+            'peserta' => $peserta,
+            'kegiatan' => $kegiatan,
+        ];
+
+        return view('Admin.dashboard.DataPeserta.daftarpeserta', compact('kegiatan', 'peserta'));
+    }
+
 }

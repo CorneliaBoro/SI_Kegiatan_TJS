@@ -1,4 +1,5 @@
 
+
 <?php $__env->startSection('header'); ?>
     <div class="row mb-2 mx-2 justify-content-between">
         <div class="col-sm-5">
@@ -18,7 +19,6 @@
             <div>
                 <a href="<?php echo e(route('laporan.create')); ?>" class="btn btn-primary">+ Tambah Data</a>
             </div>
-
         </div>
     </div>
 <?php $__env->stopSection(); ?>
@@ -43,9 +43,15 @@
                         <td><?php echo e($laporans->kegiatan->nama); ?></td>
                         <td><?php echo e($laporans->kegiatan->waktu); ?></td>
                         <td>
-                                <img src="<?php echo e(asset('storage/dokumentas-laporan/' . $laporans->file_dokumentasi)); ?>" alt="Dokumentasi Kegiatan" width="100">
+                            <?php if($laporans->file_dokumentasi): ?>
+                                <?php $__currentLoopData = json_decode($laporans->file_dokumentasi); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <img src="<?php echo e(Storage::url('dokumentas-laporan/' . $file)); ?>" alt="<?php echo e($file); ?>" style="max-width: 100px; max-height: 100px; margin: 5px;">
+
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php endif; ?>
                         </td>
                         <td>
+                            
                             <a href="<?php echo e(route('daftarpeserta.index', ['id' => $laporans->id_kegiatan])); ?>" class="btn btn-sm btn-info">Daftar Peserta</a>
                         </td>
                         <td>

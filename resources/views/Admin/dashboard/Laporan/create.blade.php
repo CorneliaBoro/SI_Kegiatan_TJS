@@ -31,9 +31,9 @@
     
         <div class="form-group">
             <label for="file_dokumentasi" class="form-label">Upload Dokumentasi</label>
-            <input type="file" class="form-control" id="file_dokumentasi" name="file_dokumentasi" required>
+            <input type="file" class="form-control" id="file_dokumentasi" name="file_dokumentasi[]" multiple required>
         </div>
     
         <button type="submit" class="btn btn-primary">Submit</button>
     </form> 
-    @endsection
+@endsection

@@ -111,7 +111,13 @@
 
         return $hari . ' ' . $bulan[$bulan_angka] . ' ' . $tahun;
     }
+
+    function getMimeType($file) {
+        $path = public_path('storage/dokumentas-laporan/' . $file);
+        return mime_content_type($path);
+    }
     ?>
+
     <div class="container">
         <div class="header">
             <h1>Laporan Kegiatan</h1>
@@ -123,8 +129,13 @@
         </div>
         <div class="table-container">
             <h2>Dokumentasi Kegiatan</h2>
-            <img src="data:image/png;base64,<?php echo e($base64_dokumentasi); ?>" alt="Dokumentasi Kegiatan" style="width: 200; height: auto;">
+            <?php $__currentLoopData = json_decode($laporan->file_dokumentasi); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <?php $file = str_replace(' ', '%20', $file); ?>
+                <p><?php echo e(Storage::url('dokumentas-laporan/' . $file)); ?></p> <!-- Debug URL -->
+                <img src="<?php echo e(Storage::url('dokumentas-laporan/' . $file)); ?>" alt="<?php echo e($file); ?>" style="max-width: 100px; max-height: 100px; margin: 5px;" />
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
+        
         <div class="table-container">
             <h2>Daftar Peserta</h2>
             <table>
@@ -140,16 +151,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php $__currentLoopData = $peserta; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $pesertas): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                    <?php $__currentLoopData = $peserta; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <tr>
                             <td><?php echo e($index + 1); ?></td>
-                            <td><?php echo e($pesertas->nama); ?></td>
-                            <td><?php echo e($pesertas->nik); ?></td>
-                            <td><?php echo e($pesertas->tgl_lahir); ?></td>
-                            <td><?php echo e($pesertas->no_hp); ?></td>
-                            <td><?php echo e($pesertas->alamat); ?></td>
+                            <td><?php echo e($item->nama); ?></td>
+                            <td><?php echo e($item->nik); ?></td>
+                            <td><?php echo e($item->tgl_lahir); ?></td>
+                            <td><?php echo e($item->no_hp); ?></td>
+                            <td><?php echo e($item->alamat); ?></td>
                             <td>
-                                <img src="data:image/png;base64,<?php echo e(base64_encode(file_get_contents(public_path('storage/dokumen-ktp/' . $pesertas->dokumen)))); ?>" alt="KTP">
+                                <img src="data:image/png;base64,<?php echo e($item->base64_dokumen); ?>" alt="KTP">
                             </td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

@@ -71,6 +71,7 @@ Route::get('TJS/bukti-pendaftaran/{id}', [PendaftaranController::class, 'show'])
 
 // Route untuk cetak bukti
 Route::get('/daftarpeserta/{id}', [DaftarPesertaController::class, 'index'])->name('daftarpeserta.index');
+Route::get('/kelolapeserta/{id}', [DaftarPesertaController::class, 'kelolapeserta'])->name('kelolapeserta');
 Route::get('/cetakdaftarpeserta', [DaftarPesertaController::class, 'reportpdf']);
 Route::get('/dokumen{file}', [PendaftaranController::class, 'viewDokumen'])->name('dokumen');
 

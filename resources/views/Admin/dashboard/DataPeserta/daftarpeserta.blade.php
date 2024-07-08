@@ -1,15 +1,31 @@
 <!-- resources/views/daftar_peserta/index.blade.php -->
-@extends('layout.app')
+@extends('Admin.dashboard.layout.dash-layout')
 
-@section('content')
+@section('header')
+    <div class="row mb-2 mx-2 justify-content-between">
+        <div class="col-sm-5">
+            <h1>Data Peserta {{ $kegiatan->nama }}</h1>
+        </div>
+        <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+                <li class="breadcrumb-item active">Data Peserta</li>
+            </ol>
+        </div>
+    </div>
+@endsection
+
+@section('konten')
 <div class="container">
-    <h1>Daftar Peserta</h1>
 
     @if (session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
+
+    <div class="mb-3">
+        <a href="" class="btn btn-primary">Tambah Data Peserta</a>
+    </div>
 
     <table class="table table-bordered">
         <thead>
@@ -22,14 +38,13 @@
                 <th>Alamat</th>
                 <th>Dokumen</th>
                 <th>Tanggal Pendaftaran</th>
+                <th>Aksi</th> <!-- Kolom untuk aksi -->
             </tr>
         </thead>
         <tbody>
-            
-            <?php $i = 1; ?>
-            @foreach ($peserta as $pesertas)
+            @foreach ($peserta as $index => $pesertas)
             <tr>
-                <td>{{ $i }}</td>
+                <td>{{ $index + 1 }}</td>
                 <td>{{ $pesertas->nama }}</td>
                 <td>{{ $pesertas->nik }}</td>
                 <td>{{ $pesertas->tgl_lahir }}</td>
@@ -39,8 +54,16 @@
                    <img src="{{ asset('storage/dokumen-ktp/' . $pesertas->dokumen) }}" alt="" width="130">
                 </td>
                 <td>{{ $pesertas->created_at->format('d-m-Y H:i:s') }}</td>
+                <td>
+                    <a href="" class="btn btn-sm btn-primary">Edit</a>
+                    <form action="" method="POST" style="display: inline-block;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
+                    </form>
+                    <a href="" class="btn btn-sm btn-primary">Cetak</a>
+                </td>
             </tr>
-            <?php $i++; ?>
             @endforeach
         </tbody>
     </table>
