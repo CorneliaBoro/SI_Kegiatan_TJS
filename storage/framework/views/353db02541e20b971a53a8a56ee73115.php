@@ -53,7 +53,8 @@
             <a href="<?php echo e(route('dashboard')); ?>" class="brand-link">
                 <img src="<?php echo e(asset('dist/img/2.png')); ?>" alt="Logo"
                     class="brand-image img-circle elevation-3" style="opacity: .8">
-                <span class="brand-text font-weight-light">Kel. Tunjungsekar</span>
+                    <span class="brand-text font-weight-light" style="font-weight: bold;">SIKAR</span>
+
             </a>
 
             <!-- Sidebar -->

@@ -23,7 +23,8 @@
 <body class="hold-transition login-page">
     <div class="login-box">
         <div class="login-logo">
-            <a href="../../index2.html"><b>Kel.</b>Tunjungsekar</a>
+            <a href="../../index2.html"><b>SIKAR.</b></a>
+            <p style="font-size: 20px;">Sistem Informasi Kegiatan Tunjungsekar</p>
         </div>
 
         <div class="card">

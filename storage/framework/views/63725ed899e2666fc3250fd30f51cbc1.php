@@ -129,12 +129,11 @@
         </div>
         <div class="table-container">
             <h2>Dokumentasi Kegiatan</h2>
-            <?php $__currentLoopData = json_decode($laporan->file_dokumentasi); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $file): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                <?php $file = str_replace(' ', '%20', $file); ?>
-                <p><?php echo e(Storage::url('dokumentas-laporan/' . $file)); ?></p> <!-- Debug URL -->
-                <img src="<?php echo e(Storage::url('dokumentas-laporan/' . $file)); ?>" alt="<?php echo e($file); ?>" style="max-width: 100px; max-height: 100px; margin: 5px;" />
+            <?php $__currentLoopData = $base64_dokumentasi; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $base64_image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <img src="<?php echo e($base64_image); ?>" alt="Dokumentasi Kegiatan" style="max-width: 100px; max-height: 100px; margin: 5px;" />
             <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
         </div>
+        
         
         <div class="table-container">
             <h2>Daftar Peserta</h2>
@@ -160,7 +159,7 @@
                             <td><?php echo e($item->no_hp); ?></td>
                             <td><?php echo e($item->alamat); ?></td>
                             <td>
-                                <img src="data:image/png;base64,<?php echo e($item->base64_dokumen); ?>" alt="KTP">
+                                <img src="<?php echo e($item->base64_dokumen); ?>" alt="KTP" style="max-width: 100px; max-height: 100px;">
                             </td>
                         </tr>
                     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>

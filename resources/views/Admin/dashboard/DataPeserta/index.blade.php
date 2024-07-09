@@ -21,7 +21,7 @@
                     <th class="col-1">No</th>
                     <th class="col-3">Nama Kegiatan</th>
                     <th class="col-2">Daftar Peserta</th>
-                    <th class="col-2">Kelola Peserta</th> <!-- Tambah kolom baru -->
+                    {{-- <th class="col-2">Kelola Peserta</th> <!-- Tambah kolom baru --> --}}
                 </tr>
             </thead>
             <tbody>
@@ -32,9 +32,9 @@
                         <td class="col-2">
                             <a href="{{ route('daftarpeserta.index',['id' => $item->id]) }}" class="btn btn-sm btn-warning">Cetak Daftar Peserta</a>
                         </td>
-                        <td class="col-2">
+                        {{-- <td class="col-2">
                             <a href="{{ route('kelolapeserta',['id' => $item->id]) }}" class="btn btn-sm btn-info">Kelola Peserta</a>
-                        </td>
+                        </td> --}}
                     </tr>
                 @endforeach
             </tbody>

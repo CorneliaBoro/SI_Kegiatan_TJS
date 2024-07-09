@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\laporan;
 use App\Models\datakegiatan;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,5 +16,10 @@ class datapegawai extends Model
     public function datakegiatan()
     {
         return $this->hasMany(datakegiatan::class);
+    }
+
+    public function laporan()
+    {
+        return $this->hasMany(laporan::class);
     }
 }

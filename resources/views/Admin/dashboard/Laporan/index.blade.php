@@ -64,6 +64,7 @@
                             </form>
                             
                             <a href="{{ route('laporan.print', ['id' => $laporans->id_kegiatan]) }}" rel="noopener" target="_blank" class="btn btn-secondary"><i class="fas fa-print"></i></a>
+                            <a href="{{ route('print.excel', ['id' => $laporans->id_kegiatan]) }}" rel="noopener" target="_blank" class="btn btn-success"><i class="fas fa-file-excel"></i></a>
                         </td>
                     </tr>
                 @endforeach

@@ -129,12 +129,11 @@
         </div>
         <div class="table-container">
             <h2>Dokumentasi Kegiatan</h2>
-            @foreach(json_decode($laporan->file_dokumentasi) as $file)
-                <?php $file = str_replace(' ', '%20', $file); ?>
-                <p>{{ Storage::url('dokumentas-laporan/' . $file) }}</p> <!-- Debug URL -->
-                <img src="{{ Storage::url('dokumentas-laporan/' . $file) }}" alt="{{ $file }}" style="max-width: 100px; max-height: 100px; margin: 5px;" />
+            @foreach($base64_dokumentasi as $base64_image)
+                <img src="{{ $base64_image }}" alt="Dokumentasi Kegiatan" style="max-width: 100px; max-height: 100px; margin: 5px;" />
             @endforeach
         </div>
+        
         
         <div class="table-container">
             <h2>Daftar Peserta</h2>
@@ -160,7 +159,7 @@
                             <td>{{ $item->no_hp }}</td>
                             <td>{{ $item->alamat }}</td>
                             <td>
-                                <img src="data:image/png;base64,{{ $item->base64_dokumen }}" alt="KTP">
+                                <img src="{{ $item->base64_dokumen }}" alt="KTP" style="max-width: 100px; max-height: 100px;">
                             </td>
                         </tr>
                     @endforeach

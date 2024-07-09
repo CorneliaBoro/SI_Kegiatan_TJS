@@ -41,6 +41,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/daftarpeserta/{id}', [DaftarPesertaController::class, 'index'])->name('daftarpeserta.index');
         Route::resource('/laporan', LaporanController::class);
         Route::get('/laporan/{id}/print', [LaporanController::class, 'print'])->name('laporan.print');
+        Route::get('/laporan/{id}/excel', [LaporanController::class, 'export_excel'])->name('print.excel');
     });
 });
 
